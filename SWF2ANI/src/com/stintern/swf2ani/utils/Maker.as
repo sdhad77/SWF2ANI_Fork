@@ -462,6 +462,10 @@ package com.stintern.swf2ani.utils
                 for(var i:int=0; i<_sceneDataVector[j].length; i++)
                 {
                     var selectedBmp:Bitmap = _bmpDictionary[_sceneDataVector[j][i].name];
+                    
+                    if(selectedBmp.width%2 == 1) selectedBmp.width += 1;
+                    if(selectedBmp.height%2 == 1) selectedBmp.height += 1;
+                    
                     var newItem:XML =
                         XML("<atlasItem name =" + "\"" + _sceneDataVector[j][i].sceneName + "_" + i.toString() + ".png" + "\" " + 
                                           "x =" + "\"" + selectedBmp.x                      + "\" " +
