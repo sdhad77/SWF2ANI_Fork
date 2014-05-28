@@ -188,6 +188,7 @@ package com.stintern.swf2ani.utils
                             _bmpVector.push(new Bitmap(bmpData));
                             _bmpDictionary[selected.toString()] = _bmpVector[_bmpVector.length - 1];
                         }
+                        else _bmpDictionary[selected.toString()] = _bmpVector[k];
                         
                         tempFrameData.name = selected.toString();
                         tempFrameData.sceneName = mc.currentScene.name;
