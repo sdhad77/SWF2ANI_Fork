@@ -127,6 +127,9 @@ package com.stintern.swf2ani.utils
         private const SPRITE_SHEET_2048_X_2048:int = 4194304;
         private const SPRITE_SHEET_4096_X_4096:int = 16777216;
         
+        //두개의 비트맵데이터가 완전히 일치하지는 않지만, 유사도가 높을 경우 같은 비트맵데이터로 처리하기 위한 비율입니다.
+        private const ALLOWABLE_BITMAPDATA_DIFFERENCE_RATE:Number = 0.001;
+        
         public function Maker()
         {
             init();
@@ -156,25 +159,25 @@ package com.stintern.swf2ani.utils
             var selected:DisplayObject;
             var bmpData:BitmapData;
             
-            for(var l:uint=1; l<=mc.scenes.length; l++)
+            for(var sceneIdx:uint=1; sceneIdx<=mc.scenes.length; sceneIdx++)
             {
                 _dataVector = new Vector.<FrameData>;
                 
-                for( var i:uint=1; i<=mc.currentScene.numFrames; ++i)
+                for( var frameIdx:uint=1; frameIdx<=mc.currentScene.numFrames; ++frameIdx)
                 { 
-                    mc.gotoAndStop(i);
+                    mc.gotoAndStop(frameIdx);
                     
-                    for(var j:uint = 0; j<mc.numChildren; ++j)
+                    for(var childIdx:uint = 0; childIdx<mc.numChildren; ++childIdx)
                     {
                         thisBmpIsNewBmp = true;
-                        selected = mc.getChildAt(j);
+                        selected = mc.getChildAt(childIdx);
                         bmpData = new BitmapData (selected.width, selected.height,true,0x00000000);
                         
                         bmpData.draw(mc, new Matrix(1,0,0,1,-selected.x, -selected.y));
                         
-                        for(var k:uint=0; k<_bmpVector.length; k++)
+                        for(var bmpVectorIdx:uint=0; bmpVectorIdx<_bmpVector.length; bmpVectorIdx++)
                         {
-                            if(_bmpVector[k].bitmapData.compare(bmpData) == 0)
+                            if(bitmapDataCustomCompare(_bmpVector[bmpVectorIdx].bitmapData, bmpData) == true)
                             {
                                 thisBmpIsNewBmp = false;
                                 break;
@@ -188,7 +191,7 @@ package com.stintern.swf2ani.utils
                             _bmpVector.push(new Bitmap(bmpData));
                             _bmpDictionary[selected.toString()] = _bmpVector[_bmpVector.length - 1];
                         }
-                        else _bmpDictionary[selected.toString()] = _bmpVector[k];
+                        else _bmpDictionary[selected.toString()] = _bmpVector[bmpVectorIdx];
                         
                         tempFrameData.name = selected.toString();
                         tempFrameData.sceneName = mc.currentScene.name;
@@ -210,6 +213,52 @@ package com.stintern.swf2ani.utils
             tempFrameData = null;
             
             return new Array(new Bitmap(_spriteSheet), _xml);
+        }
+        
+        /**
+         * 두개의 bitmapData를 비교하는 함수입니다.</br>
+         * 두 data의 유사도를 체크하여, 두 data가 사실상 동일하다고 봐도 무방할 경우 두 개의 data가 일치하는 것으로 판단합니다.
+         * @param bitmapData1 비교대상 1
+         * @param bitmapData2 비교대상 2
+         * @return 두 bitmapData가 일치할 경우 true, 일치하지 않을 경우 false
+         */
+        private function bitmapDataCustomCompare(bitmapData1:BitmapData, bitmapData2:BitmapData):Boolean
+        {
+            var diffBmpDataObj:Object = bitmapData1.compare(bitmapData2);
+            
+            // 완전히 일치하는 경우
+            if(diffBmpDataObj == 0)
+            {
+                diffBmpDataObj = null;
+                return true;
+            }
+            // 두 bitmapData의 width, height가 다른 경우
+            else if(diffBmpDataObj < 0)
+            {
+                diffBmpDataObj = null;
+                return false;
+            }
+            // 일치하지 않는 경우
+            else
+            {
+                var diffPixel:int = 0;
+                var totalPixel:int = diffBmpDataObj.width * diffBmpDataObj.height;
+                
+                // 일치하지 않는 픽셀이 몇개인지 조사
+                for(var i:int=0; i<diffBmpDataObj.width; i++)
+                    for(var j:int=0; j<diffBmpDataObj.height; j++)
+                        diffPixel += (diffBmpDataObj.getPixel(i,j) != 0)? 1 : 0;
+                
+                diffBmpDataObj = null;
+                
+                //전체 픽셀 중 일치하지 않는 픽셀이 차지하는 비율을 구하고, 사용자가 정의한 값보다 작은 비율일 경우 두 개의 bitmapData는 일치하는것으로 판단합니다.
+                if(diffPixel/totalPixel < ALLOWABLE_BITMAPDATA_DIFFERENCE_RATE)
+                {
+                    return true;
+                }
+            }
+            
+            return false;
         }
         
         /**
