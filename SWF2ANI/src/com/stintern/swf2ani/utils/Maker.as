@@ -156,7 +156,7 @@ package com.stintern.swf2ani.utils
         {
             var tempFrameData:FrameData;
             var thisBmpIsNewBmp:Boolean = true;
-            var selected:DisplayObject;
+            var selected:MovieClip;
             var bmpData:BitmapData;
             
             for(var sceneIdx:uint=1; sceneIdx<=mc.scenes.length; sceneIdx++)
@@ -169,37 +169,44 @@ package com.stintern.swf2ani.utils
                     
                     for(var childIdx:uint = 0; childIdx<mc.numChildren; ++childIdx)
                     {
-                        thisBmpIsNewBmp = true;
-                        selected = mc.getChildAt(childIdx);
-                        bmpData = new BitmapData (selected.width, selected.height,true,0x00000000);
+                        selected = mc.getChildAt(childIdx) as MovieClip;
                         
-                        bmpData.draw(mc, new Matrix(1,0,0,1,-selected.x, -selected.y));
-                        
-                        for(var bmpVectorIdx:uint=0; bmpVectorIdx<_bmpVector.length; bmpVectorIdx++)
+                        for(var i:uint = 0; i<selected.totalFrames; ++i)
                         {
-                            if(bitmapDataCustomCompare(_bmpVector[bmpVectorIdx].bitmapData, bmpData) == true)
+                            thisBmpIsNewBmp = true;
+                            
+                            bmpData = new BitmapData (mc.loaderInfo.width, mc.loaderInfo.height,true,0x00000000);
+                            
+                            bmpData.draw(mc, new Matrix(1,0,0,1, 0, 0));
+                            
+                            for(var bmpVectorIdx:uint=0; bmpVectorIdx<_bmpVector.length; bmpVectorIdx++)
                             {
-                                thisBmpIsNewBmp = false;
-                                break;
+                                if(bitmapDataCustomCompare(_bmpVector[bmpVectorIdx].bitmapData, bmpData) == true)
+                                {
+                                    thisBmpIsNewBmp = false;
+                                    break;
+                                }
                             }
+                            
+                            tempFrameData = new FrameData;
+                            
+                            if(thisBmpIsNewBmp == true)
+                            {
+                                _bmpVector.push(new Bitmap(bmpData));
+                                _bmpDictionary[selected.toString() + i.toString()] = _bmpVector[_bmpVector.length - 1];
+                            }
+                            else _bmpDictionary[selected.toString() + i.toString()] = _bmpVector[bmpVectorIdx];
+                            
+                            tempFrameData.name = selected.toString() + i.toString();
+                            tempFrameData.sceneName = mc.currentScene.name;
+                            tempFrameData.frameX = selected.x;
+                            tempFrameData.frameY = selected.y;
+                            tempFrameData.frameWidth = mc.loaderInfo.width;
+                            tempFrameData.frameHeight = mc.loaderInfo.height;
+                            _dataVector.push(tempFrameData);
+                            
+                            selected.nextFrame();
                         }
-                        
-                        tempFrameData = new FrameData;
-                        
-                        if(thisBmpIsNewBmp == true)
-                        {
-                            _bmpVector.push(new Bitmap(bmpData));
-                            _bmpDictionary[selected.toString()] = _bmpVector[_bmpVector.length - 1];
-                        }
-                        else _bmpDictionary[selected.toString()] = _bmpVector[bmpVectorIdx];
-                        
-                        tempFrameData.name = selected.toString();
-                        tempFrameData.sceneName = mc.currentScene.name;
-                        tempFrameData.frameX = selected.x;
-                        tempFrameData.frameY = selected.y;
-                        tempFrameData.frameWidth = mc.loaderInfo.width;
-                        tempFrameData.frameHeight = mc.loaderInfo.height;
-                        _dataVector.push(tempFrameData);
                     }
                 }
                 _sceneDataVector.push(_dataVector);
