@@ -171,13 +171,13 @@ package com.stintern.swf2ani.utils
                     {
                         selected = mc.getChildAt(childIdx) as MovieClip;
                         
-                        for(var i:uint = 0; i<selected.totalFrames; ++i)
+                        if(selected.totalFrames == 1)
                         {
                             thisBmpIsNewBmp = true;
                             
-                            bmpData = new BitmapData (mc.loaderInfo.width, mc.loaderInfo.height,true,0x00000000);
+                            bmpData = new BitmapData (selected.width, selected.height,true,0x00000000);
                             
-                            bmpData.draw(mc, new Matrix(1,0,0,1, 0, 0));
+                            bmpData.draw(selected, new Matrix(1,0,0,1, 0, 0));
                             
                             for(var bmpVectorIdx:uint=0; bmpVectorIdx<_bmpVector.length; bmpVectorIdx++)
                             {
@@ -193,19 +193,56 @@ package com.stintern.swf2ani.utils
                             if(thisBmpIsNewBmp == true)
                             {
                                 _bmpVector.push(new Bitmap(bmpData));
-                                _bmpDictionary[selected.toString() + i.toString()] = _bmpVector[_bmpVector.length - 1];
+                                _bmpDictionary[selected.toString()] = _bmpVector[_bmpVector.length - 1];
                             }
-                            else _bmpDictionary[selected.toString() + i.toString()] = _bmpVector[bmpVectorIdx];
+                            else _bmpDictionary[selected.toString()] = _bmpVector[bmpVectorIdx];
                             
-                            tempFrameData.name = selected.toString() + i.toString();
+                            tempFrameData.name = selected.toString();
                             tempFrameData.sceneName = mc.currentScene.name;
                             tempFrameData.frameX = selected.x;
                             tempFrameData.frameY = selected.y;
                             tempFrameData.frameWidth = mc.loaderInfo.width;
                             tempFrameData.frameHeight = mc.loaderInfo.height;
                             _dataVector.push(tempFrameData);
-                            
-                            selected.nextFrame();
+                        }
+                        else
+                        {
+                            for(var i:uint = 0; i<selected.totalFrames; ++i)
+                            {
+                                thisBmpIsNewBmp = true;
+                                
+                                bmpData = new BitmapData (mc.loaderInfo.width, mc.loaderInfo.height,true,0x00000000);
+                                
+                                bmpData.draw(mc, new Matrix(1,0,0,1, 0, 0));
+                                
+                                for(bmpVectorIdx=0; bmpVectorIdx<_bmpVector.length; bmpVectorIdx++)
+                                {
+                                    if(bitmapDataCustomCompare(_bmpVector[bmpVectorIdx].bitmapData, bmpData) == true)
+                                    {
+                                        thisBmpIsNewBmp = false;
+                                        break;
+                                    }
+                                }
+                                
+                                tempFrameData = new FrameData;
+                                
+                                if(thisBmpIsNewBmp == true)
+                                {
+                                    _bmpVector.push(new Bitmap(bmpData));
+                                    _bmpDictionary[selected.toString() + i.toString()] = _bmpVector[_bmpVector.length - 1];
+                                }
+                                else _bmpDictionary[selected.toString() + i.toString()] = _bmpVector[bmpVectorIdx];
+                                
+                                tempFrameData.name = selected.toString() + i.toString();
+                                tempFrameData.sceneName = mc.currentScene.name;
+                                tempFrameData.frameX = selected.x;
+                                tempFrameData.frameY = selected.y;
+                                tempFrameData.frameWidth = mc.loaderInfo.width;
+                                tempFrameData.frameHeight = mc.loaderInfo.height;
+                                _dataVector.push(tempFrameData);
+                                
+                                selected.nextFrame();
+                            }
                         }
                     }
                 }
@@ -498,7 +535,7 @@ package com.stintern.swf2ani.utils
             _spriteSheet = new BitmapData (_packingSpaceWidth, _packingSpaceHeight,true,0x00000000);
             
             //이미지 한장에 그리는 중
-            for(var i:int; i<_bmpVector.length; i++)
+            for(var i:int = 0; i<_bmpVector.length; i++)
             {
                 _spriteSheet.draw(_bmpVector[i], new Matrix(1,0,0,1,_bmpVector[i].x,_bmpVector[i].y));
             }
