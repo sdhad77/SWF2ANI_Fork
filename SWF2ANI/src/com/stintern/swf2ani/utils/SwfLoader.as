@@ -141,7 +141,6 @@ package com.stintern.swf2ani.utils
                         }
                         else
                         {
-                            
                             for(var i:uint = 0; i<selected.totalFrames; ++i)
                             {
                                 thisBmpIsNewBmp = true;
@@ -172,8 +171,8 @@ package com.stintern.swf2ani.utils
                                 
                                 tempFrameData.name = selected.toString() + i.toString();
                                 tempFrameData.sceneName = mc.currentScene.name;
-                                tempFrameData.frameX = selected.x;
-                                tempFrameData.frameY = selected.y;
+                                tempFrameData.frameX = selected.transform.pixelBounds.x/selected.transform.concatenatedMatrix.a*selected.transform.matrix.a;
+                                tempFrameData.frameY = selected.transform.pixelBounds.y/selected.transform.concatenatedMatrix.d*selected.transform.matrix.d;
                                 tempFrameData.frameWidth = mc.loaderInfo.width;
                                 tempFrameData.frameHeight = mc.loaderInfo.height;
                                 dataVector.push(tempFrameData);
