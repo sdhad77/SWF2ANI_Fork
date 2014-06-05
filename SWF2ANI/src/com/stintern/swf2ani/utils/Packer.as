@@ -282,8 +282,10 @@ package com.stintern.swf2ani.utils
                     if(selectedBmp.width%2 == 1) selectedBmp.width += 1;
                     if(selectedBmp.height%2 == 1) selectedBmp.height += 1;
                     
+                    if(_sceneDataVector[j][i].sceneName != "") _sceneDataVector[j][i].name = _sceneDataVector[j][i].sceneName + "_" + i.toString() + ".png";
+                    
                     var newItem:XML =
-                        XML("<atlasItem name =" + "\"" + _sceneDataVector[j][i].sceneName + "_" + i.toString() + ".png" + "\" " + 
+                        XML("<atlasItem name =" + "\"" + _sceneDataVector[j][i].name        + "\" " + 
                                           "x =" + "\"" + selectedBmp.x                      + "\" " +
                                           "y =" + "\"" + selectedBmp.y                      + "\" " + 
                                       "width =" + "\"" + selectedBmp.width                  + "\" " + 
