@@ -141,7 +141,6 @@ package com.stintern.swf2ani.utils
                                 tempFrameData.frameY = selected.transform.pixelBounds.y/selected.transform.concatenatedMatrix.d*selected.transform.matrix.d;
                                 tempFrameData.frameWidth = mc.loaderInfo.width;
                                 tempFrameData.frameHeight = mc.loaderInfo.height;
-                                if(selected["type"] == "Button") tempFrameData.type = "Button";
                                 dataVector.push(tempFrameData);
                                 
                                 selected.nextFrame();

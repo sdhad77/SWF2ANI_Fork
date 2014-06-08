@@ -9,7 +9,6 @@ package com.stintern.swf2ani.utils.datatype
         private var _frameWidth:Number;
         private var _frameHeight:Number;
         private var _rotate:Boolean = false;
-        private var _type:String;
         
         public function FrameData()
         {
@@ -22,7 +21,6 @@ package com.stintern.swf2ani.utils.datatype
         public function get frameY():Number              { return _frameY;      }
         public function get frameWidth():Number          { return _frameWidth;  }
         public function get frameHeight():Number         { return _frameHeight; }
-        public function get type():String                { return _type;        }
         
         public function set name(value:String):void        { _name        = value; }
         public function set sceneName(value:String):void   { _sceneName   = value; }
@@ -31,6 +29,5 @@ package com.stintern.swf2ani.utils.datatype
         public function set frameY(value:Number):void      { _frameY      = value; }
         public function set frameWidth(value:Number):void  { _frameWidth  = value; }
         public function set frameHeight(value:Number):void { _frameHeight = value; }
-        public function set type(value:String):void        { _type        = value; }
     }
 }

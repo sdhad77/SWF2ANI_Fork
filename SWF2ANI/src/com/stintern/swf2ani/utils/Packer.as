@@ -296,8 +296,7 @@ package com.stintern.swf2ani.utils
                                      "frameX =" + "\"" + _sceneDataVector[j][i].frameX      + "\" " +
                                      "frameY =" + "\"" + _sceneDataVector[j][i].frameY      + "\" " + 
                                  "frameWidth =" + "\"" + _sceneDataVector[j][i].frameWidth  + "\" " + 
-                                "frameHeight =" + "\"" + _sceneDataVector[j][i].frameHeight + "\" " +
-                                       "type =" + "\"" + _sceneDataVector[j][i].type        + "\" " +" />");
+                                "frameHeight =" + "\"" + _sceneDataVector[j][i].frameHeight + "\" " +" />");
                     
                     _xml.appendChild(newItem);
                     newItem = null;
