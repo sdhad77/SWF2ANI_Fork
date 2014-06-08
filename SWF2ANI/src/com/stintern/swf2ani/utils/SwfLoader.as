@@ -99,48 +99,14 @@ package com.stintern.swf2ani.utils
                     
                     for(var childIdx:uint = 0; childIdx<mc.numChildren; ++childIdx)
                     {
-                        selected = mc.getChildAt(childIdx) as MovieClip;
-                        
                         if(mc.getChildAt(childIdx).toString() == "[object StaticText]")
                         {
-                            var ooo:StaticText = mc.getChildAt(childIdx) as StaticText;
-                            
-                            thisBmpIsNewBmp = true;
-                            
-                            bmpData = new BitmapData (Math.ceil(ooo.width), Math.ceil(ooo.height),true,0x00000000);
-                            
-                            bmpData.draw(ooo, new Matrix(ooo.transform.matrix.a,0,0,ooo.transform.matrix.d,
-                                ooo.x-ooo.transform.pixelBounds.x/ooo.transform.concatenatedMatrix.a*ooo.transform.matrix.a,
-                                ooo.y-ooo.transform.pixelBounds.y/ooo.transform.concatenatedMatrix.d*ooo.transform.matrix.d));
-                            
-                            for(var bmpVectorIdx:uint=0; bmpVectorIdx<bmpVector.length; bmpVectorIdx++)
-                            {
-                                if(bitmapDataCustomCompare(bmpVector[bmpVectorIdx].bitmapData, bmpData) == true)
-                                {
-                                    thisBmpIsNewBmp = false;
-                                    break;
-                                }
-                            }
-                            
-                            tempFrameData = new FrameData;
-                            
-                            if(thisBmpIsNewBmp == true)
-                            {
-                                bmpVector.push(new Bitmap(bmpData));
-                                bmpDictionary[ooo.toString()] = bmpVector[bmpVector.length - 1];
-                            }
-                            else bmpDictionary[ooo.toString()] = bmpVector[bmpVectorIdx];
-                            
-                            tempFrameData.name = ooo.toString();
-                            tempFrameData.sceneName = mc.currentScene.name;
-                            tempFrameData.frameX = ooo.x;
-                            tempFrameData.frameY = ooo.y;
-                            tempFrameData.frameWidth = mc.loaderInfo.width;
-                            tempFrameData.frameHeight = mc.loaderInfo.height;
-                            dataVector.push(tempFrameData);
+                            var staticText:StaticText = mc.getChildAt(childIdx) as StaticText;
                         }
                         else
                         {
+                            selected = mc.getChildAt(childIdx) as MovieClip;
+                            
                             for(var i:uint = 0; i<selected.totalFrames; ++i)
                             {
                                 thisBmpIsNewBmp = true;
@@ -151,7 +117,7 @@ package com.stintern.swf2ani.utils
                                     selected.x-selected.transform.pixelBounds.x/selected.transform.concatenatedMatrix.a*selected.transform.matrix.a,
                                     selected.y-selected.transform.pixelBounds.y/selected.transform.concatenatedMatrix.d*selected.transform.matrix.d));
                                 
-                                for(bmpVectorIdx=0; bmpVectorIdx<bmpVector.length; bmpVectorIdx++)
+                                for(var bmpVectorIdx:int=0; bmpVectorIdx<bmpVector.length; bmpVectorIdx++)
                                 {
                                     if(bitmapDataCustomCompare(bmpVector[bmpVectorIdx].bitmapData, bmpData) == true)
                                     {
