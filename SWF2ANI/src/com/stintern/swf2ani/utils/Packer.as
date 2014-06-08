@@ -113,15 +113,18 @@ package com.stintern.swf2ani.utils
             //sprite sheet의 최종사이즈를 패킹할 이미지 전체의 크기의 합을 기반으로 예측하여 설정하는 함수.
             packingSpacePredictionInit();
             
-            packingTreeRoot.rect = new Rect(_imgBorderLine, _imgBorderLine, _packingSpaceWidth, _packingSpaceHeight);
+            packingTreeRoot.rect = new Rect(0, 0, _packingSpaceWidth, _packingSpaceHeight);
             
             for(var i:int = 0; i < _bmpVector.length; i++)
             {	
                 //Sheet에 추가할 이미지의 width,height 세팅
-                rect = new Rect(0,0, _bmpVector[i].width + _imgBorderLine, _bmpVector[i].height + _imgBorderLine);   
+                rect = new Rect(0,0, _bmpVector[i].width + _imgBorderLine, _bmpVector[i].height + _imgBorderLine);
+                
+                if(_bmpVector[i].width == _packingSpaceWidth) rect.width -= _imgBorderLine;
+                if(_bmpVector[i].height == _packingSpaceHeight) rect.height -= _imgBorderLine;
                 
                 //트리 탐색과정
-                node = Insert_Rect(packingTreeRoot, rect);  
+                node = Insert_Rect(packingTreeRoot, rect);
                 
                 //이미지가 저장될 공간이 있을 경우
                 if(node)
@@ -212,7 +215,7 @@ package com.stintern.swf2ani.utils
             
             //새로운 탐색을 위해 노드를 새로 설정함
             root = new Node;
-            root.rect = new Rect(_imgBorderLine, _imgBorderLine, _packingSpaceWidth, _packingSpaceHeight);
+            root.rect = new Rect(0, 0, _packingSpaceWidth, _packingSpaceHeight);
             
             //패킹된 공간도 초기화
             _packedSpace = 0;
