@@ -288,15 +288,15 @@ package com.stintern.swf2ani.utils
                     if(_sceneDataVector[j][i].sceneName != "") _sceneDataVector[j][i].name = _sceneDataVector[j][i].sceneName + "_" + i.toString() + ".png";
                     
                     var newItem:XML =
-                        XML("<atlasItem name =" + "\"" + _sceneDataVector[j][i].name        + "\" " + 
-                                          "x =" + "\"" + selectedBmp.x                      + "\" " +
-                                          "y =" + "\"" + selectedBmp.y                      + "\" " + 
-                                      "width =" + "\"" + selectedBmp.width                  + "\" " + 
-                                     "height =" + "\"" + selectedBmp.height                 + "\" " + 
-                                     "frameX =" + "\"" + _sceneDataVector[j][i].frameX      + "\" " +
-                                     "frameY =" + "\"" + _sceneDataVector[j][i].frameY      + "\" " + 
-                                 "frameWidth =" + "\"" + _sceneDataVector[j][i].frameWidth  + "\" " + 
-                                "frameHeight =" + "\"" + _sceneDataVector[j][i].frameHeight + "\" " +" />");
+                        XML("<SubTexture name =" + "\"" + _sceneDataVector[j][i].name        + "\" " + 
+                                           "x =" + "\"" + selectedBmp.x                      + "\" " +
+                                           "y =" + "\"" + selectedBmp.y                      + "\" " + 
+                                       "width =" + "\"" + selectedBmp.width                  + "\" " + 
+                                      "height =" + "\"" + selectedBmp.height                 + "\" " + 
+                                      "frameX =" + "\"" + _sceneDataVector[j][i].frameX      + "\" " +
+                                      "frameY =" + "\"" + _sceneDataVector[j][i].frameY      + "\" " + 
+                                  "frameWidth =" + "\"" + _sceneDataVector[j][i].frameWidth  + "\" " + 
+                                 "frameHeight =" + "\"" + _sceneDataVector[j][i].frameHeight + "\" " +" />");
                     
                     _xml.appendChild(newItem);
                     newItem = null;
