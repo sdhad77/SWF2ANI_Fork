@@ -6,7 +6,6 @@ package com.stintern.swf2ani.utils
     
     import flash.display.Bitmap;
     import flash.display.BitmapData;
-    import flash.geom.Matrix;
     import flash.utils.Dictionary;
     
     /**
@@ -26,6 +25,7 @@ package com.stintern.swf2ani.utils
         private var _packingMaxSpace   :int;    //최대 저장가능한 공간을 저장함
         private var _packingSpaceWidth :int;    //패킹한 이미지들을 저장할 png의 width
         private var _packingSpaceHeight:int;    //패킹한 이미지들을 저장할 png의 height
+        private var _isRotate          :Boolean;//현재 패킹중인 이미지가 회전된 이미지인지
         
         //스프라이트 시트 이미지, 그에 해당되는 xml 파일
         private var _xml            :XML;
@@ -123,12 +123,36 @@ package com.stintern.swf2ani.utils
                 if(_bmpVector[i].width == _packingSpaceWidth) rect.width -= _imgBorderLine;
                 if(_bmpVector[i].height == _packingSpaceHeight) rect.height -= _imgBorderLine;
                 
+                //항상 탐색전에 false로.
+                _isRotate = false;
+                
                 //트리 탐색과정
                 node = Insert_Rect(packingTreeRoot, rect);
                 
                 //이미지가 저장될 공간이 있을 경우
                 if(node)
                 {	
+                    if(_isRotate)
+                    {
+                        //이미지 회전
+                        _bmpVector[i].rotation = 90;
+                        _bmpVector[i].x = _bmpVector[i].width;
+                        
+                        //회전시킨거 그림
+                        var tempBMD:BitmapData = new BitmapData(_bmpVector[i].width, _bmpVector[i].height,true,0x00000000);
+                        tempBMD.draw(_bmpVector[i], _bmpVector[i].transform.matrix);
+                        
+                        //이미지 다른곳에 그렸으니까 다시 매트릭스 원상복귀
+                        _bmpVector[i].rotation = 0;
+                        _bmpVector[i].x = 0;
+                        
+                        //새로 그린 이미지로 연결해줌
+                        _bmpVector[i].bitmapData = tempBMD;
+                        
+                        _bmpVector[i].metaData = new Object;
+                        _bmpVector[i].metaData["rotated"] = true;
+                    }
+
                     //이미지 위치 세팅
                     _bmpVector[i].x = node.rect.x;
                     _bmpVector[i].y = node.rect.y;
@@ -168,7 +192,17 @@ package com.stintern.swf2ani.utils
             if(root.filled) return null;
             
             //rc의 크기가 너무 클 경우 null 리턴
-            if(rc.isTooBig(root.rect)) return null;
+            if(rc.isTooBig(root.rect))
+            {
+                var rotateRc:Rect = new Rect(rc.x, rc.y, rc.height, rc.width);
+                
+                if(rotateRc.isTooBig(root.rect)) return null;
+                else
+                {
+                    rc = rotateRc;
+                    _isRotate = true;
+                }
+            }
             
             //사이즈가 정확히 일치할 경우.
             if(rc.isSameSize(root.rect))
@@ -262,7 +296,7 @@ package com.stintern.swf2ani.utils
             //이미지 한장에 그리는 중
             for(var i:int = 0; i<_bmpVector.length; i++)
             {
-                _spriteSheet.draw(_bmpVector[i], new Matrix(1,0,0,1,_bmpVector[i].x,_bmpVector[i].y));
+                _spriteSheet.draw(_bmpVector[i], _bmpVector[i].transform.matrix);
             }
         }
         
@@ -285,6 +319,8 @@ package com.stintern.swf2ani.utils
                     if(selectedBmp.width%2 == 1) selectedBmp.width += 1;
                     if(selectedBmp.height%2 == 1) selectedBmp.height += 1;
                     
+                    if(selectedBmp.metaData != null && selectedBmp.metaData["rotated"] == true) _sceneDataVector[j][i].rotate = true;
+                    
                     if(_sceneDataVector[j][i].sceneName != "") _sceneDataVector[j][i].name = _sceneDataVector[j][i].sceneName + "_" + i.toString() + ".png";
                     
                     var newItem:XML =
@@ -296,7 +332,8 @@ package com.stintern.swf2ani.utils
                                       "frameX =" + "\"" + -_sceneDataVector[j][i].frameX     + "\" " +
                                       "frameY =" + "\"" + -_sceneDataVector[j][i].frameY     + "\" " + 
                                   "frameWidth =" + "\"" + _sceneDataVector[j][i].frameWidth  + "\" " + 
-                                 "frameHeight =" + "\"" + _sceneDataVector[j][i].frameHeight + "\" " +" />");
+                                 "frameHeight =" + "\"" + _sceneDataVector[j][i].frameHeight + "\" " +
+                                     "rotated =" + "\"" + _sceneDataVector[j][i].rotate      + "\" " +" />");
                     
                     _xml.appendChild(newItem);
                     newItem = null;
