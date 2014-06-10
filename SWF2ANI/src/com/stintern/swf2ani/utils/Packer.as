@@ -331,8 +331,10 @@ package com.stintern.swf2ani.utils
                                       "height =" + "\"" + selectedBmp.height                 + "\" " + 
                                       "frameX =" + "\"" + -_sceneDataVector[j][i].frameX     + "\" " +
                                       "frameY =" + "\"" + -_sceneDataVector[j][i].frameY     + "\" " + 
-                                  "frameWidth =" + "\"" + _sceneDataVector[j][i].frameWidth  + "\" " + 
-                                 "frameHeight =" + "\"" + _sceneDataVector[j][i].frameHeight + "\" " +
+                //                  "frameWidth =" + "\"" + _sceneDataVector[j][i].frameWidth  + "\" " + 
+                //                 "frameHeight =" + "\"" + _sceneDataVector[j][i].frameHeight + "\" " +
+                                  "frameWidth =" + "\"" + selectedBmp.width                  + "\" " + 
+                                 "frameHeight =" + "\"" + selectedBmp.height                 + "\" " +
                                      "rotated =" + "\"" + _sceneDataVector[j][i].rotate      + "\" " +" />");
                     
                     _xml.appendChild(newItem);
