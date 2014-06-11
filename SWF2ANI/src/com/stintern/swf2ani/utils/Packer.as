@@ -319,23 +319,46 @@ package com.stintern.swf2ani.utils
                     if(selectedBmp.width%2 == 1) selectedBmp.width += 1;
                     if(selectedBmp.height%2 == 1) selectedBmp.height += 1;
                     
-                    if(selectedBmp.metaData != null && selectedBmp.metaData["rotated"] == true) _sceneDataVector[j][i].rotate = true;
+                    if(_sceneDataVector[j][i].sceneName != "")
+                    {
+                        if(_sceneDataVector[j].length >= 10 && i < 10) _sceneDataVector[j][i].name = _sceneDataVector[j][i].sceneName + "_0" + i.toString() + ".png";
+                        else _sceneDataVector[j][i].name = _sceneDataVector[j][i].sceneName + "_" + i.toString() + ".png";
+                    }
                     
-                    if(_sceneDataVector[j][i].sceneName != "") _sceneDataVector[j][i].name = _sceneDataVector[j][i].sceneName + "_" + i.toString() + ".png";
-                    
-                    var newItem:XML =
-                        XML("<SubTexture name =" + "\"" + _sceneDataVector[j][i].name        + "\" " + 
-                                           "x =" + "\"" + selectedBmp.x                      + "\" " +
-                                           "y =" + "\"" + selectedBmp.y                      + "\" " + 
-                                       "width =" + "\"" + selectedBmp.width                  + "\" " + 
-                                      "height =" + "\"" + selectedBmp.height                 + "\" " + 
-                                      "frameX =" + "\"" + -_sceneDataVector[j][i].frameX     + "\" " +
-                                      "frameY =" + "\"" + -_sceneDataVector[j][i].frameY     + "\" " + 
-                //                  "frameWidth =" + "\"" + _sceneDataVector[j][i].frameWidth  + "\" " + 
-                //                 "frameHeight =" + "\"" + _sceneDataVector[j][i].frameHeight + "\" " +
-                                  "frameWidth =" + "\"" + selectedBmp.width                  + "\" " + 
-                                 "frameHeight =" + "\"" + selectedBmp.height                 + "\" " +
-                                     "rotated =" + "\"" + _sceneDataVector[j][i].rotate      + "\" " +" />");
+                    if(selectedBmp.metaData != null && selectedBmp.metaData["rotated"] == true)
+                    {
+                        _sceneDataVector[j][i].rotate = true;
+                        
+                        var newItem:XML =
+                            XML("<SubTexture name =" + "\"" + _sceneDataVector[j][i].name        + "\" " + 
+                                               "x =" + "\"" + selectedBmp.x                      + "\" " +
+                                               "y =" + "\"" + selectedBmp.y                      + "\" " + 
+                                           "width =" + "\"" + selectedBmp.width                  + "\" " + 
+                                          "height =" + "\"" + selectedBmp.height                 + "\" " + 
+                                          "frameX =" + "\"" + -_sceneDataVector[j][i].frameX     + "\" " +
+                                          "frameY =" + "\"" + -_sceneDataVector[j][i].frameY     + "\" " + 
+                    //                  "frameWidth =" + "\"" + _sceneDataVector[j][i].frameWidth  + "\" " + 
+                    //                 "frameHeight =" + "\"" + _sceneDataVector[j][i].frameHeight + "\" " +
+                                      "frameWidth =" + "\"" + selectedBmp.height                 + "\" " + 
+                                     "frameHeight =" + "\"" + selectedBmp.width                  + "\" " +
+                                         "rotated =" + "\"" + _sceneDataVector[j][i].rotate      + "\" " +" />");
+                    }
+                    else
+                    {
+                        newItem =
+                            XML("<SubTexture name =" + "\"" + _sceneDataVector[j][i].name        + "\" " + 
+                                               "x =" + "\"" + selectedBmp.x                      + "\" " +
+                                               "y =" + "\"" + selectedBmp.y                      + "\" " + 
+                                           "width =" + "\"" + selectedBmp.width                  + "\" " + 
+                                          "height =" + "\"" + selectedBmp.height                 + "\" " + 
+                                          "frameX =" + "\"" + -_sceneDataVector[j][i].frameX     + "\" " +
+                                          "frameY =" + "\"" + -_sceneDataVector[j][i].frameY     + "\" " + 
+                    //                  "frameWidth =" + "\"" + _sceneDataVector[j][i].frameWidth  + "\" " + 
+                    //                 "frameHeight =" + "\"" + _sceneDataVector[j][i].frameHeight + "\" " +
+                                      "frameWidth =" + "\"" + selectedBmp.width                  + "\" " + 
+                                     "frameHeight =" + "\"" + selectedBmp.height                 + "\" " +
+                                         "rotated =" + "\"" + _sceneDataVector[j][i].rotate      + "\" " +" />");
+                    }
                     
                     _xml.appendChild(newItem);
                     newItem = null;
